@@ -81,6 +81,7 @@ namespace Consoler.Commands
                     Console.WriteLine(command.getCommandName() + " - " + command.getShortHelpText());
                 }
                 Console.WriteLine("---------------------------------------");
+                Console.WriteLine("Type \"help -f <command_name>\" to get full help if it's exist.");
             }
             base.executeCommand();
             return;

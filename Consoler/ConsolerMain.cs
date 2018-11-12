@@ -46,9 +46,6 @@ namespace Consoler
             List<String> flags = new List<String>();
             List<string> arguments = new List<String>();
             cmd = cmd.Trim(' ');
-            char[] spaceAndLast = new char[2];
-            spaceAndLast[0] = ' ';
-            spaceAndLast[1] = cmd[cmd.Length - 1];
             spaceIndex = cmd.IndexOf(" ");
 
             if (spaceIndex == -1)
@@ -82,7 +79,10 @@ namespace Consoler
                     {
                         if (Regex.Match(cmd[0].ToString(), @"[0-9]").Success)
                         {
-                            tmp = cmd.Substring(0, cmd.IndexOfAny(spaceAndLast) + 1);
+                            if (cmd.IndexOf(" ") > 0)
+                                tmp = cmd.Substring(0, cmd.IndexOf(" ") + 1);
+                            else
+                                tmp = cmd.Substring(0, cmd.Length);
                             int.Parse(tmp);
                             arguments[arguments.Count-1] = tmp.Trim(' ');
                             if (cmd.IndexOf(" ") != -1)
@@ -90,7 +90,10 @@ namespace Consoler
                         }
                         else if (Regex.Match(cmd[0].ToString(), @"[a-zA-Z]").Success)
                         {
-                            tmp = cmd.Substring(0, cmd.IndexOfAny(spaceAndLast)+1);
+                            if (cmd.IndexOf(" ") > 0)
+                                tmp = cmd.Substring(0, cmd.IndexOf(" ") + 1);
+                            else
+                                tmp = cmd.Substring(0, cmd.Length);
                             arguments[arguments.Count - 1] = tmp.Trim(' ');
                             if (cmd.IndexOf(" ") != -1)
                                 cmd = cmd.Substring(cmd.IndexOf(" ")+1, cmd.Length- cmd.IndexOf(" ")-1);
@@ -150,11 +153,25 @@ namespace Consoler
             ConsolerCommand clearCmd = new ClearCommand()
                 .setCommandName("clear")
                 .setShortHelpText("Clear consoler space from text and other stuff.");
+            ConsolerCommand sayCmd = new SayCommand()
+                .setCommandName("say")
+                .setShortHelpText("Print phrase with line break or without it.")
+                .setFullHelpText("Print phrase with line break or without it.\n" +
+                "Arguments:\n" +
+                "-pl - Print line with line break.\n" +
+                "-p - Print just text without line breaks.");
+            ConsolerCommand scriptCmd = new ScriptCommand()
+                .setCommandName("execute")
+                .setShortHelpText("Execute script with consoler syntax.")
+                .setFullHelpText("Execute script with consoler syntax. Lines must be ended by nothing, just line break to use next command.\n" +
+                "Argument -p is the one, it's need to set path to executing file. File can be any extension and size.");
             register(helpCmd);
             register(altHelpCmd);
             register(exitCmd);
             register(versionCmd);
             register(clearCmd);
+            register(sayCmd);
+            register(scriptCmd);
             while (true)
             {
                 string line = Console.ReadLine();

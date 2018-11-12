@@ -63,7 +63,10 @@ namespace Consoler
         public string getArg(string flagName)
         {
             if (this.CommandFlags.IndexOf(flagName) < 0)
-                throw new ArgumentException("This flag is not exist.");
+            {
+                Console.WriteLine("Command cannot be executed without flags.");
+                return "";
+            }
 
             if (flagName[0] != '-' &&
                         this.CommandArgs[this.CommandFlags.IndexOf(flagName)] != "")
@@ -93,7 +96,8 @@ namespace Consoler
                 }
             }
 
-            throw new ArgumentException("These flags are not exist.");
+            Console.WriteLine("Invalid syntax: argument is set but flag is not exist.");
+            return "";
         }
         public bool isFlagExist(string flagName)
         {
